@@ -43,8 +43,6 @@ export class GetOrderQueueUseCase {
         message: 'Failed to get order queue information',
         httpCode: 500,
       };
-
-      console.log('Error in query Database', error);
     }
 
     return output;
