@@ -60,7 +60,7 @@ export class GetOrderQueueUseCase {
       let orderQueue: orderqueueInfo = {
         id: element.id,
         order_id: element.order_id,
-        status: element.status_queue,
+        status_queue: element.status_queue,
         waiting_time: element.waiting_time,
         orderDate: element.orderDate,
       };
