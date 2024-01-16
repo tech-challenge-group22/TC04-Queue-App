@@ -58,5 +58,10 @@
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
+  },
+  "nyc": {
+    "all": true,
+    "include": ["src/**/*.ts"],
+    "reporter": ["lcov", "text"]
   }
 }
