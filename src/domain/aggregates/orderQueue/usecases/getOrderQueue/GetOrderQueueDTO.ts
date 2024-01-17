@@ -12,7 +12,7 @@ export interface GetOrderQueueOutputDTO {
 export type orderqueueInfo = {
   id: string;
   order_id: number;
-  status: string;
+  status_queue: string;
   waiting_time: string;
   orderDate: string;
 };
