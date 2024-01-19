@@ -1,8 +1,8 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import * as sinon from "sinon";
 import assert from "assert";
-import { GetOrderQueueUseCase } from "../../src/domain/aggregates/orderQueue/usecases/getOrderQueue/GetOrderQueue";
-import { GetOrderQueueOutputDTO } from "../../src/domain/aggregates/orderQueue/usecases/getOrderQueue/GetOrderQueueDTO";
+import { GetOrderQueueUseCase } from "../../../../src/domain/aggregates/orderQueue/usecases/getOrderQueue/GetOrderQueue";
+import { GetOrderQueueOutputDTO } from "../../../../src/domain/aggregates/orderQueue/usecases/getOrderQueue/GetOrderQueueDTO";
 
 let result: GetOrderQueueOutputDTO;
 

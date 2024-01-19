@@ -62,7 +62,7 @@
   "nyc": {
     "all": true,
     "include": ["src/**/*.ts"],
-    "exclude": ["src/main.ts", "src/**/*.test.ts"],
+    "exclude": ["src/main.ts"],
     "reporter": ["lcov", "text"]
   }
 }

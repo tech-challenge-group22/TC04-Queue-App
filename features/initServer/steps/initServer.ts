@@ -1,7 +1,7 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import assert from "assert";
-import ExpressAdapter from "../../src/application/adapters/ExpressAdapter";
-import OrderQueueRoute from "../../src/infrastructure/api/orderqueue.route"
+import ExpressAdapter from "../../../src/application/adapters/ExpressAdapter";
+import OrderQueueRoute from "../../../src/infrastructure/api/orderqueue.route"
 
 let server: ExpressAdapter;
 let orderQueueRoute: any;
