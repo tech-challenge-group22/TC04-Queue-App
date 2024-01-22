@@ -3,6 +3,7 @@ import * as sinon from "sinon";
 import assert from "assert";
 import IOrderQueueGateway from "../../../src/domain/aggregates/orderQueue/core/ports/IOrderQueueGateway";
 import { MoveNextUseCase } from "../../../src/domain/aggregates/orderQueue/usecases/moveNext/MoveNext";
+import IQueueService from "../../../src/application/ports/IQueueService";
 
 Given(
 	"Inicio o moveNext passando o id {int}",
@@ -16,6 +17,12 @@ Given(
 			commit: sinon.stub(),
 			rollback: sinon.stub(),
 		};
+
+		const queueServiceMock: IQueueService = {
+			sendMessage: sinon.stub(),
+			receiveMessage: sinon.stub(),
+			messageID: sinon.stub()
+		}
 
 		const setupGatewayMock = (orderId: number) => {
 			let mockGetOrderQueue;
@@ -67,7 +74,8 @@ Given(
 
 		this.result = await MoveNextUseCase.execute(
 			{ id: int },
-			MoveNextGatewayMock
+			MoveNextGatewayMock,
+			queueServiceMock
 		);
 	}
 );
