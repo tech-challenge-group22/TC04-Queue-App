@@ -1,7 +1,7 @@
 module.exports = {
 	default: [
 		"--require-module ts-node/register",
-		"--require ./features/**/*.ts",
-		"--require ./features/**/*.features",
+		"--require ./tests/step_definitions/**/*.ts",
+		"tests/features/**/*.feature"
 	].join(" "),
 };

@@ -1,4 +1,4 @@
-import CPF from '../CPF';
+import CPF from '../../../../src/domain/sharedKernel/valueObjects/CPF';
 
 describe('CPF', () => {
   test('should validate a valid CPF with only number', () => {
@@ -12,8 +12,8 @@ describe('CPF', () => {
   });
 
   test('should throw an error for an invalid CPF', () => {
-    expect(() => {
-      new CPF('00000000000');
-    }).toThrowError('invalid CPF');
+    const invalidCpfValue = '00000000000';
+    const cpf = new CPF(invalidCpfValue);
+    expect(() => cpf.validate(cpf.value)).toThrow('invalid CPF');
   });
 });
