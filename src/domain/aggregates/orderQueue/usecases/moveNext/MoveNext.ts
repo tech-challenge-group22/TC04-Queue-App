@@ -8,11 +8,14 @@ import {
   MoveNextOutputDTO,
   orderqueueInfo,
 } from './MoveNextDTO';
+import IQueueService from '../../../../../application/ports/IQueueService';
+
 
 export class MoveNextUseCase {
   static async execute(
     params: MoveNextInputDTO,
     gateway: IOrderQueueGateway,
+    queueService: IQueueService,
   ): Promise<MoveNextOutputDTO> {
     try {
       gateway.beginTransaction();
@@ -63,6 +66,11 @@ export class MoveNextUseCase {
         waiting_time,
       );
       gateway.commit();
+      
+      //Send message to the Queue
+      if (status_queue_enum_id == statusCode["Finalizado"]) {
+        queueService.sendMessage('order_id:' + myOrder[0].order_id);
+      }
 
       const result = await gateway.getOrderQueue(params.id);
       const output = this.transformToOutput(result);
