@@ -5,7 +5,6 @@ import * as dotenv from 'dotenv';
 import { SQS } from 'aws-sdk';
 import cron from 'node-cron';
 
-
 export default class AWSSQSAdapter implements IQueueService {
     private sqs = new SQS();
     private AWS = require('aws-sdk');
