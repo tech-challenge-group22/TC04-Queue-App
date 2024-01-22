@@ -10,17 +10,27 @@ export default class AWSSQSAdapter implements IQueueService {
     private sqs = new SQS();
     private AWS = require('aws-sdk');
     private cron = undefined;
+    private static _instance: AWSSQSAdapter;
         
-    constructor (polling_interval: number) {
+    private constructor () {
         dotenv.config();
 
         this.AWS.config.update({ region: process.env.AWS_REGION });
+
+        const polling_interval = Number(process.env.MSG_POLLING_INTERVAL);
 
         //exemple: 
         // cron.schedule('*/5 * * * * *', .....)
         cron.schedule('*/' + polling_interval.toString() + ' * * * * *', () => {            
             this.receiveMessage();
         });
+    }
+
+    static getInstance(): AWSSQSAdapter {
+        if ( !this._instance ) {
+            this._instance = new AWSSQSAdapter();
+        }
+        return this._instance;
     }
 
     async sendMessage (message: string) {

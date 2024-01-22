@@ -12,4 +12,4 @@ server.router(OrderQueueRoute);
 server.listen(3000);
 
 //console.log ('starting listening to messages...');
-const queueService = new AWSSQSAdapter( Number(process.env.MSG_POLLING_INTERVAL) );
+const queueService = AWSSQSAdapter.getInstance();
