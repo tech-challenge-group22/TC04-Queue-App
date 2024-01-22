@@ -94,7 +94,7 @@ export default class ExpressAdapter implements HttpServer {
   }
 
   isRunning(): boolean {
-    return this.httpServer != null && this.httpServer.listening;
+    return this.httpServer?.listening ?? false;
   }
 
   isRunningOnPort(port: number): boolean {
