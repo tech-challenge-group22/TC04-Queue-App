@@ -6,10 +6,11 @@ import OrderQueueRoute from "../../../src/infrastructure/api/orderqueue.route"
 
 let adapter: ExpressAdapter;
 let response: request.Response;
+let orderQueueRoute: OrderQueueRoute;
 
 Given('I have registered the OrderQueue routes', function () {
   adapter = new ExpressAdapter();
-  new OrderQueueRoute(adapter); // This will register the routes
+  orderQueueRoute = new OrderQueueRoute(adapter); // This will register the routes
 });
 
 When('I make a GET request to {string} with order_id {string}', async function (path: string, orderId: string) {
