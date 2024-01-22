@@ -2,6 +2,8 @@ import { GetOrderQueueUseCase } from '../usecases/getOrderQueue/GetOrderQueue';
 import { GetOrderQueueInputDTO } from '../usecases/getOrderQueue/GetOrderQueueDTO';
 import { MoveNextInputDTO } from '../usecases/moveNext/MoveNextDTO';
 import { MoveNextUseCase } from '../usecases/moveNext/MoveNext';
+import { NewOrderQueueInputDTO } from '../usecases/newOrderQueue/NewOrderQueueDTO';
+import { NewOrderQueueUseCase } from '../usecases/newOrderQueue/NewOrderQueue';
 import DynamoDBOrderQueueRepository from '../gateways/DynamoDBOrderQueueRepository';
 
 export class OrderQueueController {
@@ -19,5 +21,13 @@ export class OrderQueueController {
       id: orderId,
     };
     return await MoveNextUseCase.execute(input, orderQueueGateway);
+  }
+
+  static async newOrderQueue(orderId: number): Promise<any> {
+    const orderQueueGateway = new DynamoDBOrderQueueRepository();
+    const input: NewOrderQueueInputDTO = {
+      order_id: orderId,
+    };
+    return await NewOrderQueueUseCase.execute(input, orderQueueGateway);
   }
 }

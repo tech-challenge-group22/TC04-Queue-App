@@ -8,6 +8,8 @@ import {
   MoveNextOutputDTO,
   orderqueueInfo,
 } from './MoveNextDTO';
+import AWSSQSAdapter from '../../../../../application/adapters/AWSSQSAdapter';
+
 
 export class MoveNextUseCase {
   static async execute(
@@ -63,6 +65,17 @@ export class MoveNextUseCase {
         waiting_time,
       );
       gateway.commit();
+      
+      //Send message to the Queue
+      if (status_queue_enum_id == statusCode["Finalizado"]){
+        // TODO - TO BE REVIEWED
+/*
+        const queueService = new AWSSQSAdapter(process.env.);
+        queueService.sendMessage('order_id:' + myOrder[0].order_id + ', ' +
+                                 'status_queue_id:'+ myOrder[0].status_queue);
+*/
+
+      }
 
       const result = await gateway.getOrderQueue(params.id);
       const output = this.transformToOutput(result);

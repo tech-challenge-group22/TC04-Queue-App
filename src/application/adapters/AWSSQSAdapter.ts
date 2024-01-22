@@ -1,0 +1,82 @@
+import IQueueService from "../ports/IQueueService";
+import { OrderQueueController } from "../../domain/aggregates/orderQueue/controllers/OrderQueueController";
+import { NewOrderQueueOutputDTO } from "../../domain/aggregates/orderQueue/usecases/newOrderQueue/NewOrderQueueDTO";
+import * as dotenv from 'dotenv';
+import { SQS } from 'aws-sdk';
+import cron from 'node-cron';
+
+
+export default class AWSSQSAdapter implements IQueueService {
+    private sqs = new SQS();
+    private AWS = require('aws-sdk');
+    private cron = undefined;
+        
+    constructor (polling_interval: number) {
+        dotenv.config();
+
+        this.AWS.config.update({ region: process.env.AWS_REGION });
+
+        //exemple: 
+        // cron.schedule('*/5 * * * * *', .....)
+        cron.schedule('*/' + polling_interval.toString() + ' * * * * *', () => {            
+            this.receiveMessage();
+        });
+    }
+
+    async sendMessage (message: string) {
+        message = 'Id: ' + this.messageID().toString() + ', ' + message;
+
+        const params: SQS.Types.SendMessageRequest = {
+          QueueUrl: `${process.env.AWS_OUTPUT_QUEUE_URL}`,
+          MessageBody: JSON.stringify(message),
+          MessageGroupId: `${process.env.AWS_MESSAGE_GROUP}`,
+        };
+      
+        try {
+          const data = await this.sqs.sendMessage(params).promise();
+            console.log('Message sent:', data.MessageId);
+        } catch (error) {
+            console.error('Error sending message:', error);
+        }
+      }
+
+    async receiveMessage () {
+        try {
+            const receiveParams: SQS.Types.ReceiveMessageRequest = {
+            QueueUrl: `${process.env.AWS_INPUT_QUEUE_URL}`,
+            MaxNumberOfMessages: 1,
+            WaitTimeSeconds: 20, // Adjust as needed
+            };
+    
+            const data = await this.sqs.receiveMessage(receiveParams).promise();
+    
+            if (data.Messages && data.Messages.length > 0) {
+                const message = data.Messages[0];
+                console.log('Received message:', message.Body);
+                
+                // Process the message as needed
+                const msgBody =  JSON.parse(String(message.Body)); 
+                const output: NewOrderQueueOutputDTO = 
+                    await OrderQueueController.newOrderQueue (Number(msgBody.order_id));
+                        
+                // Delete the message from the queue
+                await this.sqs
+                    .deleteMessage({
+                    QueueUrl: `${process.env.AWS_INPUT_QUEUE_URL}`,
+                    ReceiptHandle: message.ReceiptHandle!,
+                    })
+                    .promise();
+            }
+        } catch (error) {
+            console.error('Error processing message:', error);
+        }
+    }
+
+    // Implement timestamp logical here
+    messageID(): number {
+        return Date.now();
+    }
+}
+
+
+
