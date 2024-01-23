@@ -7,7 +7,7 @@ import IQueueService from "../../../src/application/ports/IQueueService";
 
 Given(
 	"Inicio o moveNext passando o id {int}",
-	async function (this: any, int: number) {
+	async function (this: any, id: number) {
 		const MoveNextGatewayMock: IOrderQueueGateway = {
 			getOrderQueue: sinon.stub().resolves([]),
 			getOrderQueueStatus: sinon.stub().resolves([]),
@@ -33,14 +33,12 @@ Given(
 					id: "102030",
 					order_id: orderId,
 					status_queue: "Em preparação",
-					orderDate: "22/01/2024",
 				};
 
 				mockGetOrderQueueStatus = {
 					id: "102030",
 					order_id: orderId,
 					status_queue: "Aprovado",
-					orderDate: "22/01/2024",
 				};
 			}
 
@@ -49,14 +47,12 @@ Given(
 					id: "102030",
 					order_id: orderId,
 					status_queue: "Finalizado",
-					orderDate: "22/01/2024",
 				};
 
 				mockGetOrderQueueStatus = {
 					id: "102030",
 					order_id: orderId,
 					status_queue: "Finalizado",
-					orderDate: "22/01/2024",
 				};
 			}
 
@@ -68,12 +64,18 @@ Given(
 				.resolves([mockGetOrderQueueStatus]);
 		};
 
-		if (int === 1 || int === 2) {
-			setupGatewayMock(int);
+		if (id === 1 || id === 2) {
+			setupGatewayMock(id);
+		}
+
+		if (id === 4){
+			MoveNextGatewayMock.getOrderQueueStatus = sinon
+				.stub()
+				.rejects('Failed to get order queue information')
 		}
 
 		this.result = await MoveNextUseCase.execute(
-			{ id: int },
+			{ id: id },
 			MoveNextGatewayMock,
 			queueServiceMock
 		);

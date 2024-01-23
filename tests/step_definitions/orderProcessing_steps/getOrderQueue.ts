@@ -7,14 +7,14 @@ const queue1 = {
 	id: "123456",
 	order_id: 1,
 	status_queue: "concluido",
-	waiting_time: "500",
+	waiting_time: '00:00:00',
 	orderDate: "11/07/2023",
 };
 const queue2 = {
 	id: "123457",
 	order_id: 2,
 	status_queue: "concluido",
-	waiting_time: "600",
+	waiting_time: '00:00:00',
 	orderDate: "12/07/2023",
 };
 
