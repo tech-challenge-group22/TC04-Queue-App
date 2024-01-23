@@ -31,11 +31,6 @@ export default class ExpressAdapter implements HttpServer {
     });
   }
 
-  // listen(port: number): void {
-  //   //return this.server.listen(port);
-  //   this.httpServer = this.server.listen(port);
-  // }
-
   private middleware() {
     this.server.use(express.json());
     this.server.use(
@@ -49,16 +44,6 @@ export default class ExpressAdapter implements HttpServer {
   public router(route: any) {
     this.server.use(route);
   }
-
-  // async register(
-  //   method: string,
-  //   url: string,
-  //   callback: Function,
-  // ): Promise<void> {
-  //   this.server[method](url, async function (req: Request, res: Response) {
-  //     await callback(req, res);
-  //   });
-  // }
 
   async register(
     method: string,
