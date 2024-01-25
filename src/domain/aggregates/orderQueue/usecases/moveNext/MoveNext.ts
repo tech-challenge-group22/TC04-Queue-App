@@ -60,20 +60,23 @@ export class MoveNextUseCase {
         console.log('WARNING: Order has already delivered!');
         return output;
       }
+
       await gateway.updateOrderQueue(
         myOrder[0].id,
         status_queue_enum_id,
         waiting_time,
       );
       gateway.commit();
-      
+
       //Send message to the Queue
       if (status_queue_enum_id == statusCode["Finalizado"]) {
-        queueService.sendMessage('order_id:' + myOrder[0].order_id);
+        const msg = {order_id: myOrder[0].order_id,};
+        queueService.sendMessage(msg);            
       }
 
       const result = await gateway.getOrderQueue(params.id);
       const output = this.transformToOutput(result);
+
       return output;
     } catch (error: any) {
       gateway.rollback();

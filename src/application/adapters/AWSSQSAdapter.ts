@@ -33,13 +33,14 @@ export default class AWSSQSAdapter implements IQueueService {
         return this._instance;
     }
 
-    async sendMessage (message: string) {
-        message = 'Id: ' + this.messageID().toString() + ', ' + message;
+    async sendMessage (message: any) {
+        console.log('Sending message: ' + JSON.stringify(message));
 
         const params: SQS.Types.SendMessageRequest = {
           QueueUrl: `${process.env.AWS_OUTPUT_QUEUE_URL}`,
-          MessageBody: JSON.stringify(message),
+          MessageBody: JSON.stringify(message),        
           MessageGroupId: `${process.env.AWS_MESSAGE_GROUP}`,
+          MessageDeduplicationId: `${this.messageID().toString()}`,
         };
       
         try {
@@ -54,28 +55,35 @@ export default class AWSSQSAdapter implements IQueueService {
         try {
             const receiveParams: SQS.Types.ReceiveMessageRequest = {
             QueueUrl: `${process.env.AWS_INPUT_QUEUE_URL}`,
-            MaxNumberOfMessages: 1,
-            WaitTimeSeconds: 20, // Adjust as needed
+            MaxNumberOfMessages: 10,
+            WaitTimeSeconds: 5,
             };
     
             const data = await this.sqs.receiveMessage(receiveParams).promise();
     
             if (data.Messages && data.Messages.length > 0) {
-                const message = data.Messages[0];
-                console.log('Received message:', message.Body);
-                
-                // Process the message as needed
-                const msgBody =  JSON.parse(String(message.Body)); 
-                const output: NewOrderQueueOutputDTO = 
-                    await OrderQueueController.newOrderQueue (Number(msgBody.order_id));
-                        
-                // Delete the message from the queue
-                await this.sqs
-                    .deleteMessage({
-                    QueueUrl: `${process.env.AWS_INPUT_QUEUE_URL}`,
-                    ReceiptHandle: message.ReceiptHandle!,
-                    })
-                    .promise();
+
+                console.log('Quantidade mensagens recebidas: ' + data.Messages.length);
+                for (let i: number = 0; i < data.Messages.length; i++){               
+                    const message = data.Messages[i];
+
+                    console.log('Received message:', message.Body);
+                    console.log('Message Id: '+ message.MessageId);
+
+                    // Process the message
+                    const msgBody =  JSON.parse(String(message.Body));
+                    console.log('Order Id: ' + msgBody.order_id);
+
+                    const output: NewOrderQueueOutputDTO = 
+                        await OrderQueueController.newOrderQueue (Number(msgBody.order_id));
+
+                    console.log('Deleting message Id: ' + message.MessageId);
+                    await this.sqs
+                        .deleteMessage({
+                            QueueUrl: `${process.env.AWS_INPUT_QUEUE_URL}`,
+                            ReceiptHandle: message.ReceiptHandle!,
+                        }).promise();
+                }
             }
         } catch (error) {
             console.error('Error processing message:', error);

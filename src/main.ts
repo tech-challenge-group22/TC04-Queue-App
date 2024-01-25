@@ -11,5 +11,5 @@ const orderQueueRoute = new OrderQueueRoute(server);
 server.router(OrderQueueRoute);
 server.listen(3000);
 
-//console.log ('starting listening to messages...');
+console.log ('Starting listening to messages...');
 const queueService = AWSSQSAdapter.getInstance();
