@@ -20,24 +20,6 @@ export default class OrderQueue {
     this.orderDate = orderDate ?? new Date().toISOString();
     this.waiting_time = waiting_time ?? '00:05:00';
   }
-
-  private generateOrderDate() {
-    const currentDate = new Date();
-    const options: Intl.DateTimeFormatOptions = {
-      timeZone: 'America/Sao_Paulo',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    };
-
-    const brazilianFormattedDateTime = currentDate.toLocaleString(
-      'pt-BR',
-      options,
-    );
-  }
 }
 
 export const statusName: { [key: number]: string } = {

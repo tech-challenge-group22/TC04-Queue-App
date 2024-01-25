@@ -87,7 +87,7 @@ export class MoveNextUseCase {
         httpCode: 500,
       };
 
-      console.log('Error moving order into the queue', error);
+      console.log('Error moving order into the queue');
       return output;
     }
   }
