@@ -1,5 +1,5 @@
 export default interface IQueueService {
-    sendMessage (message: string): any;
+    sendMessage (message: any): any;
     receiveMessage(): any;
     messageID(): number;
 }
