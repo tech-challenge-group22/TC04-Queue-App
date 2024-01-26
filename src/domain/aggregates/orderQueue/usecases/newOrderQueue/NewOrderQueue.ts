@@ -1,4 +1,3 @@
-import OrderQueue, { OrderWaitingTime, statusCode, } from '../../core/entities/OrderQueue';
 import IOrderQueueGateway from '../../core/ports/IOrderQueueGateway';
 import { NewOrderQueueInputDTO, NewOrderQueueOutputDTO } from './NewOrderQueueDTO';
   
