@@ -56,4 +56,4 @@ jobs:
 
     - name: Deploy to ECS
       run: |
-        aws ecs update-service --cluster queue/production --service queue/production --force-new-deployment --region ${{ secrets.AWS_REGION }}
+        aws ecs update-service --cluster queue-ecs-cluster --service queue-web --force-new-deployment --region ${{ secrets.AWS_REGION }}
