@@ -1,10 +1,11 @@
-import OrderQueue, { OrderWaitingTime, statusCode, } from '../../core/entities/OrderQueue';
 import IOrderQueueGateway from '../../core/ports/IOrderQueueGateway';
 import { NewOrderQueueInputDTO, NewOrderQueueOutputDTO } from './NewOrderQueueDTO';
   
   export class NewOrderQueueUseCase {
     static async execute( params: NewOrderQueueInputDTO, gateway: IOrderQueueGateway, ): Promise<NewOrderQueueOutputDTO> {
         try {
+            gateway.beginTransaction();
+
             await gateway.add(params.order_id);
 
             const output: NewOrderQueueOutputDTO = {
@@ -12,9 +13,10 @@ import { NewOrderQueueInputDTO, NewOrderQueueOutputDTO } from './NewOrderQueueDT
             };
             
             console.log('Adding a new order into the queue sucessfully!');
+            gateway.commit();
             return output;
-
         } catch (error: any){
+            gateway.rollback();
             const output: NewOrderQueueOutputDTO = {
                 hasError: true,
                 message: 'Failed to add a new order into the queue',

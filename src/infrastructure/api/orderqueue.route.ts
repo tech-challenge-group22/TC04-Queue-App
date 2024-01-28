@@ -49,13 +49,13 @@ export default class OrderQueueRoute {
       '/orderqueue',
       async (req: Request, resp: Response) => {
         try {
-          if (!req.query.id) {
+          if (!req.query.order_id) {
             return resp
               .status(400)
               .json({ Error: 'Missing parameters. Please provide id' });
           }
           const output: MoveNextOutputDTO = await OrderQueueController.moveNext(
-            Number(req.query.id),
+            Number(req.query.order_id),
           );
 
           if (output.hasError) {
