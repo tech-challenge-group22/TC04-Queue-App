@@ -9,8 +9,3 @@ module.exports = {
     'src',
   ],
 };
-/*
-modulePaths: [
-  '/Volumes/ExternalHD/Documents EHD/FIAP/Tech-Challenge/tech-challenge/src',
-],
-*/
