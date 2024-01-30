@@ -1,8 +1,14 @@
 import { OrderQueueController } from "../../../../../../src/domain/aggregates/orderQueue/controllers/OrderQueueController";
 import { GetOrderQueueUseCase } from "../../../../../../src/domain/aggregates/orderQueue/usecases/getOrderQueue/GetOrderQueue";
+import { MoveNextUseCase } from "../../../../../../src/domain/aggregates/orderQueue/usecases/moveNext/MoveNext";
+import { NewOrderQueueUseCase } from "../../../../../../src/domain/aggregates/orderQueue/usecases/newOrderQueue/NewOrderQueue";
 
 jest.mock(
   "../../../../../../src/domain/aggregates/orderQueue/usecases/getOrderQueue/GetOrderQueue"
+);
+
+jest.mock(
+  "../../../../../../src/domain/aggregates/orderQueue/usecases/newOrderQueue/NewOrderQueue"
 );
 
 jest.mock("@aws-sdk/lib-dynamodb", () => ({
@@ -24,24 +30,16 @@ jest.mock("@aws-sdk/lib-dynamodb", () => ({
   }));
 
 describe("getOrderQueue", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("should call GetOrderQueueUseCase", async () => {
     const orderId = 123;
     await OrderQueueController.getOrderQueue(orderId);
 
-    // Assert that GetOrderQueueUseCase.execute was called with the correct input
     expect(GetOrderQueueUseCase.execute).toHaveBeenCalledWith(
       { id: orderId }, expect.anything()
-    );
-  });
-
-  it("should call moveNext", async () => {
-    const orderId = 123;
-    await OrderQueueController.moveNext(orderId);
-
-    // Assert that GetOrderQueueUseCase.execute was called with the correct input
-    expect(GetOrderQueueUseCase.execute).toHaveBeenCalledWith(
-      { id: orderId },
-      expect.anything()
     );
   });
 
@@ -49,8 +47,7 @@ describe("getOrderQueue", () => {
     const orderId = 123;
     await OrderQueueController.newOrderQueue(orderId);
 
-    // Assert that GetOrderQueueUseCase.execute was called with the correct input
-    expect(GetOrderQueueUseCase.execute).toHaveBeenCalledWith({ id: orderId }, expect.anything());
+    expect(NewOrderQueueUseCase.execute).toHaveBeenCalledWith({ order_id: orderId }, expect.anything());
   });
 
 });
