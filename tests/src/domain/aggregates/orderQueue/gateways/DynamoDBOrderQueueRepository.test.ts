@@ -1,6 +1,4 @@
 // src/__tests__/DynamoDBOrderQueueRepository.test.ts
-import { DynamoDB } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import DynamoDBOrderQueueRepository from "../../../../../../src/domain/aggregates/orderQueue/gateways/DynamoDBOrderQueueRepository"; // Adjust the path based on your project structure
 import OrderQueue from "../../../../../../src/domain/aggregates/orderQueue/core/entities/OrderQueue";
 
@@ -14,7 +12,7 @@ jest.mock("@aws-sdk/lib-dynamodb", () => ({
             status_queue: "status",
             orderDate: "2024-01-29",
             waiting_time: "00:05:00",
-            id: "some-id",
+            id: "12345",
           },
         ],
       }),
@@ -25,7 +23,7 @@ jest.mock("@aws-sdk/lib-dynamodb", () => ({
             status_queue: "status",
             orderDate: "2024-01-29",
             waiting_time: "00:05:00",
-            id: "some-id",
+            id: "12345",
           },
         ],
       }),
@@ -36,7 +34,7 @@ jest.mock("@aws-sdk/lib-dynamodb", () => ({
             status_queue: "status",
             orderDate: "2024-01-29",
             waiting_time: "00:05:00",
-            id: "some-id",
+            id: "12345",
           },
         ],
       }),
@@ -56,7 +54,7 @@ describe("DynamoDBOrderQueueRepository", () => {
       const result = await repository.getOrderQueue();
 
       expect(result).toEqual([
-        new OrderQueue(123, "status", "2024-01-29", "00:05:00", "some-id"),
+        new OrderQueue(123, "status", "2024-01-29", "00:05:00", "12345"),
       ]);
     });
   });
@@ -66,7 +64,7 @@ describe("DynamoDBOrderQueueRepository", () => {
       const result = await repository.getOrderQueueStatus(123);
 
       expect(result).toEqual([
-        new OrderQueue(123, "status", "2024-01-29", "00:05:00", "some-id"),
+        new OrderQueue(123, "status", "2024-01-29", "00:05:00", "12345"),
       ]);
     });
   });
@@ -76,7 +74,7 @@ describe("DynamoDBOrderQueueRepository", () => {
       const result = await repository.updateOrderQueue("123", 1, 3);
 
       expect(result).toEqual([
-        new OrderQueue(123, "status", "2024-01-29", "00:05:00", "some-id"),
+        new OrderQueue(123, "status", "2024-01-29", "00:05:00", "12345"),
       ]);
     });
   });
@@ -85,7 +83,7 @@ describe("DynamoDBOrderQueueRepository", () => {
         it("should add OrderQueue", async () => {
         const result = await repository.add(123);
 
-        expect(result).toEqual({"Items": [{"id": "some-id", "orderDate": "2024-01-29", "order_id": 123, "status_queue": "status", "waiting_time": "00:05:00"}]});
+        expect(result).toEqual({"Items": [{"id": "12345", "orderDate": "2024-01-29", "order_id": 123, "status_queue": "status", "waiting_time": "00:05:00"}]});
         });
     });
 
